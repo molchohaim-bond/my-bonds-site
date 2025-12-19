@@ -2,69 +2,109 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>BondMaster IL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ממליץ האג"ח היומי</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* יישור כללי לימין */
-        body { 
-            direction: rtl !important; 
-            text-align: right !important; 
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        /* וידוא שכל תא בטבלה נצמד לימין */
-        th, td { text-align: right !important; }
+        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; }
     </style>
 </head>
-<body class="bg-gray-100 p-5">
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-10 bg-white p-8 rounded-2xl shadow-sm border border-blue-50">
+            <h1 class="text-4xl font-bold text-blue-900 mb-2">ממליץ האג"ח היומי 🚀</h1>
+            <p class="text-gray-600">המלצות השקעה מבוססות AI המעודכנות בכל בוקר</p>
+        </div>
 
-    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 class="text-3xl font-bold text-indigo-800 mb-2">ממליץ האג"ח היומי</h1>
-        <p class="text-gray-600 mb-6">ברוך הבא, molchohaim-bond. כאן יוצגו האג"ח המומלצות לסוף היום.</p>
-
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <table class="w-full text-right border-collapse">
                 <thead>
-                    <tr class="bg-indigo-50">
-                        <th class="p-3 border-b-2">שם אג"ח</th>
-                        <th class="p-3 border-b-2">תשואה</th>
-                        <th class="p-3 border-b-2">סיכון</th>
-                        <th class="p-3 border-b-2">תובנת AI</th>
+                    <tr class="bg-blue-600 text-white">
+                        <th class="p-4 font-bold">שם אג"ח</th>
+                        <th class="p-4 font-bold">סוג</th>
+                        <th class="p-4 font-bold">תשואה לפדיון</th>
+                        <th class="p-4 font-bold">סיכון</th>
+                        <th class="p-4 font-bold">תובנת AI</th>
                     </tr>
                 </thead>
-                <tbody id="data-table">
-                    </tbody>
+                <tbody id="bonds-table-body">
+                    <tr>
+                        <td colspan="5" class="p-10 text-center text-gray-500 italic">
+                            טוען נתונים מהכספת...
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         
-        <div id="loading" class="mt-4 text-center text-blue-500">טוען נתונים מהבורסה...</div>
+        <div id="status-msg" class="mt-4 text-center text-sm text-gray-400"></div>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://nmxpfzjkbdejifddkwtpk.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // האתר ימשוך את המשתנים האלו מ-Vercel באופן אוטומטי
+        const supabaseUrl = window.location.origin.includes('localhost') ? '' : 'https://nmxpfzjkbdejifddkwtpk.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0';
 
-        async function getData() {
-            const { data, error } = await _supabase.from('bonds').select('*');
-            const table = document.getElementById('data-table');
-            const loader = document.getElementById('loading');
-            
-            if (data && data.length > 0) {
-                loader.style.display = 'none';
-                table.innerHTML = data.map(item => `
-                    <tr class="border-b">
-                        <td class="p-3 font-bold">${item.bond_name}</td>
-                        <td class="p-3 text-green-600">${item.yield_percent}%</td>
-                        <td class="p-3">${item.risk_level}</td>
-                        <td class="p-3 text-sm text-gray-600">${item.recommendation_reason}</td>
-                    </tr>
-                `).join('');
-            } else {
-                loader.innerText = "הטבלה ריקה - מחכה לעדכון מהאייג'נט";
+        // התחברות
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function fetchBonds() {
+            const tableBody = document.getElementById('bonds-table-body');
+            const statusMsg = document.getElementById('status-msg');
+
+            try {
+                // משיכת נתונים מהטבלה
+                const { data, error } = await supabase
+                    .from('bonds')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="p-10 text-center text-red-500 font-bold">
+                                ⚠️ הטבלה בבסיס הנתונים ריקה. הפעל את ה-Agent ב-GitHub!
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                // ריקון הטבלה מהודעת הטעינה
+                tableBody.innerHTML = '';
+
+                // הזרקת הנתונים
+                data.forEach(bond => {
+                    const row = `
+                        <tr class="border-b border-gray-50 hover:bg-blue-50 transition-colors">
+                            <td class="p-4 font-bold text-blue-900">${bond.bond_name}</td>
+                            <td class="p-4 text-gray-600">${bond.bond_type}</td>
+                            <td class="p-4 text-green-600 font-bold text-lg">${bond.yield_percent}%</td>
+                            <td class="p-4 italic">${bond.risk_level}</td>
+                            <td class="p-4 text-sm text-gray-700 leading-relaxed max-w-xs">${bond.recommendation_reason}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+                
+                statusMsg.innerText = `עודכן לאחרונה: ${new Date().toLocaleString('he-IL')}`;
+
+            } catch (err) {
+                console.error('Error:', err);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-10 text-center text-red-500">
+                            שגיאה בחיבור: ${err.message}
+                        </td>
+                    </tr>`;
             }
         }
-        getData();
+
+        // הפעלה בטעינת הדף
+        fetchBonds();
     </script>
 </body>
 </html>
