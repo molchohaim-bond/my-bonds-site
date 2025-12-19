@@ -1,13 +1,14 @@
 import httpx
 from supabase import create_client, Client
 
-# פרטי החיבור המעודכנים לפרויקט שלך
+# פרטי החיבור המדויקים שלך
 URL = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
 KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0"
 
 supabase: Client = create_client(URL, KEY)
 
 def send_data():
+    # נתונים לדוגמה שיופיעו באתר שלך
     data = [
         {
             "bond_name": "ממשלתי שקלי 0131",
@@ -27,9 +28,9 @@ def send_data():
         }
     ]
     try:
-        # פקודה להכנסת הנתונים
+        # ניסיון להכניס את הנתונים לטבלה
         response = supabase.table("bonds").insert(data).execute()
-        print(f"✅ הצלחתי! הנתונים נשלחו: {response}")
+        print("✅ הנתונים נשלחו בהצלחה ל-Supabase!")
     except Exception as e:
         print(f"❌ שגיאה: {e}")
 
