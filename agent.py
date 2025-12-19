@@ -1,7 +1,7 @@
 import httpx
 from supabase import create_client, Client
 
-# העתק בדיוק את השורות האלו
+# כתובות נקיות ללא רווחים
 url = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0"
 
@@ -13,9 +13,9 @@ def send_data():
         {"bond_name": "לאומי אג״ח י׳", "bond_type": "אג״ח קונצרני", "yield_percent": 5.12, "duration": 3.5, "risk_level": "בינוני", "recommendation_reason": "מרווח אטרקטיבי"}
     ]
     try:
-        # פקודת הכנסה
+        # פקודה להכנסת הנתונים
         supabase.table("bonds").insert(data).execute()
-        print("✅ SUCCESS: Data sent")
+        print("✅ SUCCESS: Data sent to database")
     except Exception as e:
         print(f"❌ ERROR: {e}")
 
