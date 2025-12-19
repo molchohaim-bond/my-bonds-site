@@ -1,23 +1,24 @@
-import httpx
-from supabase import create_client, Client
+url = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
+import os
+from supabase import create_client
 
-# שים לב: הכתובת כאן נקייה לגמרי מכל תו נוסף
+# הגדרות חיבור
 url = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0"
 
-supabase: Client = create_client(url, key)
-
-def send_data():
+def run():
+    client = create_client(url, key)
     data = [
-        {"bond_name": "ממשלתי שקלי 0131", "bond_type": "אג״ח ממשלתי", "yield_percent": 4.25, "duration": 4.1, "risk_level": "נמוך", "recommendation_reason": "תשואה יציבה"},
-        {"bond_name": "לאומי אג״ח י׳", "bond_type": "אג״ח קונצרני", "yield_percent": 5.12, "duration": 3.5, "risk_level": "בינוני", "recommendation_reason": "מרווח אטרקטיבי"}
+        {"bond_name": "ממשלתי שקלי 0131", "bond_type": "אג״ח ממשלתי", "yield_percent": 4.25, "risk_level": "נמוך"},
+        {"bond_name": "לאומי אג״ח י׳", "bond_type": "אג״ח קונצרני", "yield_percent": 5.12, "risk_level": "בינוני"}
     ]
     try:
-        # פקודה להכנסת נתונים
-        supabase.table("bonds").insert(data).execute()
+        # מחיקת ישנים והכנסת חדשים
+        client.table("bonds").delete().neq("id", -1).execute()
+        client.table("bonds").insert(data).execute()
         print("✅ SUCCESS")
     except Exception as e:
         print(f"❌ ERROR: {e}")
 
 if __name__ == "__main__":
-    send_data()
+    run()
