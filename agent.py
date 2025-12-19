@@ -1,11 +1,11 @@
 import httpx
 from supabase import create_client, Client
 
-# הכתובת והמפתח המדויקים שלך - ללא רווחים
-URL = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
-KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0"
+# העתק בדיוק את השורות האלו
+url = "https://nmxpfzjkbdejifddkwtpk.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5teHBmemprYmVqaWZkZGt3dHBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwODQwNDAsImV4cCI6MjA4MTY2MDA0MH0.8TaOQDXTDp-wXY5SBhD6yMr_MM6UPkvovoe3q1XzFz0"
 
-supabase: Client = create_client(URL, KEY)
+supabase: Client = create_client(url, key)
 
 def send_data():
     data = [
@@ -14,8 +14,8 @@ def send_data():
     ]
     try:
         # פקודת הכנסה
-        response = supabase.table("bonds").insert(data).execute()
-        print("✅ SUCCESS: Data sent to Supabase")
+        supabase.table("bonds").insert(data).execute()
+        print("✅ SUCCESS: Data sent")
     except Exception as e:
         print(f"❌ ERROR: {e}")
 
